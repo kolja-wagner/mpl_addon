@@ -103,7 +103,7 @@ venv.bak/
 .ropeproject
 
 # Pycharm project settings
-.idea
+.idea/
 
 # mkdocs documentation
 /site
