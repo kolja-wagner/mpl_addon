@@ -1,2 +1,2 @@
-# mpladdition
+# Matplotlib-Addon
  ergänzungen zu matplotlib
