@@ -12,11 +12,13 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 PATH_IMG = r'IMAGES'
 
 
-def save_fig(fig, name):
+def save_fig(fig, name, path=None):
     """ Export figure to file with standart settings."""
-    if not os.path.exists(PATH_IMG):
-        os.makedirs(PATH_IMG)
-    fig.savefig(PATH_IMG + '/' + name, dpi=300, bbox_inches='tight')
+    if path == None:
+        path = PATH_IMG
+    if not os.path.exists(path):
+        os.makedirs(path)
+    fig.savefig(path + '/' + name, dpi=300, bbox_inches='tight')
 
 
 def next_color(ax):
@@ -39,7 +41,7 @@ def ticks_other(ax, which: str = 'both'):
     """Display both axis on axes for x, y or both."""
     if which == 'x' or which == 'both':
         ax.tick_params(direction='in', top=True, bottom=True, which='both')
-    elif which == 'y' or which == 'both':
+    if which == 'y' or which == 'both':
         ax.tick_params(direction='in', left=True, right=True, which='both')
     if which not in ['x', 'y', 'both']:
         raise ValueError(f"keyword 'which' has to be 'x', 'y' or 'both' but is {which}")
@@ -68,18 +70,18 @@ def ax_hide(ax, which: str = 'both'):
         raise ValueError(f"keyword 'which' has to be 'x', 'y' or 'both' but is {which}")
 
 
-def ax_color(ax, color, which: str = 'x', all: bool = False,  other: bool = False):
+def ax_color(ax, color, which: str = 'x', all: bool = False):
     if which == 'x' or which == 'both':
         ax.xaxis.label.set_color(color)
         ax.tick_params(axis='x', colors=color)
         if all:
-            label = 'bottom' if not other else 'top'
+            label = 'bottom'  # if not other else 'top'
             ax.spines[label].set_color(color)
     if which == 'y' or which == 'both':
         ax.yayis.label.set_color(color)
         ax.tick_params(axis='y', colors=color)
         if all:
-            label = 'left' if not other else 'right'
+            label = 'left'  # if not other else 'right'
             ax.spines[label].set_color(color)
     if which not in ['x', 'y', 'both']:
         raise ValueError(f"keyword 'which' has to be 'x', 'y' or 'both' but is {which}")
@@ -87,17 +89,13 @@ def ax_color(ax, color, which: str = 'x', all: bool = False,  other: bool = Fals
 
 # Helper function used for visualization in the following examples
 def identify_axes(ax_dict=None, fontsize=48):
-    """  Helper to identify the Axes in the examples below.
-    Parameters
-    ----------
-    ax_dict : dict[str, Axes]
-        Mapping between the title / label and the Axes.
-    fontsize : int, optional
-        How big the label should be.
-    p : bool, optional
-        Print some stats
-    """
+    """  Helper to identify the Axes."""
     kw = dict(ha="center", va="center", fontsize=fontsize, color="darkgrey")
+
+    if isinstance(ax_dict, np.ndarray):
+        ax_dict = ax_dict.flatten()
+        ax_dict = {i:ax for i, ax in enumerate(ax_dict)}
+
     for k, ax in ax_dict.items():
         ax.text(0.5, 0.5, k, transform=ax.transAxes, **kw)
     return ax_dict
